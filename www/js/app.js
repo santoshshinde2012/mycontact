@@ -14,8 +14,8 @@ angular.module('contactsApp', ['ionic', 'ngCordova'])
 })
 
 .controller('contactsCtrl', function($scope, $cordovaContacts, $ionicLoading){
- 
   $scope.getContacts = function() {
+  
 	$ionicLoading.show({
 			template: 'Loading...'
 	});
@@ -25,9 +25,9 @@ angular.module('contactsApp', ['ionic', 'ngCordova'])
     function onSuccess(contacts) {
       for (var i = 0; i < contacts.length; i++) {
         var contact = contacts[i];
-	      $scope.phoneContacts.push(contact);
+		 if(contact.phoneNumbers != null)
+           $scope.phoneContacts.push(contact);
       }
-	  $ionicLoading.hide();
     };
 
     function onError(contactError) {
@@ -36,6 +36,8 @@ angular.module('contactsApp', ['ionic', 'ngCordova'])
 
     var options = {};
     options.multiple = true;
-    $cordovaContacts.find(options).then(onSuccess, onError);
+    $cordovaContacts.find(options).then(onSuccess, onError).finally(function () {
+         $ionicLoading.hide();
+    });
   };
 });
